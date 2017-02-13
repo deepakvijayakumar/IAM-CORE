@@ -19,12 +19,17 @@ public class ConsoleLauncher {
 	
 	private static JDBCIdentityDAO dao;
 	private static AdminDAO adminDao;
-
+	
+    private ConsoleLauncher() {
+	//  Auto-generated constructor stub
+    }
 	/**
 	 * Main function
 	 * @param args         Default string array for taking command line arguments
 	 * @throws Exception   Any exception thrown by the function
 	 */
+	
+	
 	public static void main(String[] args) throws Exception {
 		
 		System.out.println("Hello, Welcome to the IAM application");
@@ -69,12 +74,13 @@ public class ConsoleLauncher {
 		case "e":
 			//exiting the application
 			System.out.println("You have exited the IAM application");
+			break;
 		default:
 			System.out.println("This option is not recognized ("+ answer + ")");
 			break;
 		}
 		
-		}while(!answer.equals("e"));
+		}while(!"e".equals(answer));
 		scanner.close();
 
 	}
@@ -170,8 +176,8 @@ public class ConsoleLauncher {
 		System.out.println("d. List Identities");
 		System.out.println("e. quit");
 		System.out.println("your choice (a|b|c|d|e) ? : ");
-		String answer = scanner.nextLine();
-		return answer;
+		return scanner.nextLine();
+		
 	}
 
 	/**

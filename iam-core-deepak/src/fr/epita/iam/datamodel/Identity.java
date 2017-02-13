@@ -7,7 +7,7 @@ package fr.epita.iam.datamodel;
 /**
  * @author Deepz
  *
- *Class used for the storing the identities data
+ *Class used for the storing the identities datas
  */
 public class Identity {
 	

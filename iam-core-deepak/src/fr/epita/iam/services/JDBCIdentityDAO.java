@@ -16,7 +16,7 @@ import fr.epita.iam.datamodel.Identity;
 /**
  * @author Deepz
  *
- *Class to perform database services
+ *Class to perform database service
  */
 public class JDBCIdentityDAO {
 
@@ -43,14 +43,15 @@ public class JDBCIdentityDAO {
 		String insertStatement = "insert into IDENTITIES (IDENTITIES_DISPLAYNAME, IDENTITIES_EMAIL, IDENTITIES_PHONENUMBER) "
 				+ "values(?, ?, ?)";
 		
-		PreparedStatement pstmt_insert = connection.prepareStatement(insertStatement);
+		PreparedStatement pstmtInsert = connection.prepareStatement(insertStatement);
 		
 		
-		pstmt_insert.setString(1, identity.getDisplayName());
-		pstmt_insert.setString(2, identity.getEmail());
-		pstmt_insert.setString(3, identity.getPhoneNumber());
+		pstmtInsert.setString(1, identity.getDisplayName());
+		pstmtInsert.setString(2, identity.getEmail());
+		pstmtInsert.setString(3, identity.getPhoneNumber());
 
-		pstmt_insert.execute();
+		pstmtInsert.execute();
+		pstmtInsert.close();
 		
 	
 
@@ -62,10 +63,10 @@ public class JDBCIdentityDAO {
 	 * @throws SQLException  if there is an error in running the sql query
 	 */
 	public List<Identity> readAll() throws SQLException {
-		List<Identity> identities = new ArrayList<Identity>();
+		List<Identity> identities = new ArrayList<>();
 
-		PreparedStatement pstmt_select = connection.prepareStatement("select * from IDENTITIES");
-		ResultSet rs = pstmt_select.executeQuery();
+		PreparedStatement pstmtSelect = connection.prepareStatement("select * from IDENTITIES");
+		ResultSet rs = pstmtSelect.executeQuery();
 		while (rs.next()) {
 			String displayName = rs.getString("IDENTITIES_DISPLAYNAME");
 			String uid = String.valueOf(rs.getString("IDENTITIES_UID"));
@@ -74,7 +75,9 @@ public class JDBCIdentityDAO {
 			Identity identity = new Identity(uid, displayName, email, phoneNumber);
 			identities.add(identity);
 		}
+		pstmtSelect.close();
 		return identities;
+	
 
 	}
 
@@ -89,14 +92,15 @@ public class JDBCIdentityDAO {
 	public boolean updateIdentity(Identity newIdentity)throws SQLException {
 		
 		String updateStatement = "UPDATE IDENTITIES SET IDENTITIES_DISPLAYNAME=?,IDENTITIES_EMAIL=?,IDENTITIES_PHONENUMBER=? WHERE IDENTITIES_UID=?";
-		int no_of_rows;
-		PreparedStatement pstmt_update = connection.prepareStatement(updateStatement);
-		pstmt_update.setString(1, newIdentity.getDisplayName());
-		pstmt_update.setString(2, newIdentity.getEmail());
-		pstmt_update.setString(3, newIdentity.getPhoneNumber());
-		pstmt_update.setString(4, newIdentity.getUid());
-		no_of_rows=pstmt_update.executeUpdate();
-		return(no_of_rows>0);
+		int numberOfRows;
+		PreparedStatement pstmtUpdate = connection.prepareStatement(updateStatement);
+		pstmtUpdate.setString(1, newIdentity.getDisplayName());
+		pstmtUpdate.setString(2, newIdentity.getEmail());
+		pstmtUpdate.setString(3, newIdentity.getPhoneNumber());
+		pstmtUpdate.setString(4, newIdentity.getUid());
+		numberOfRows=pstmtUpdate.executeUpdate();
+		pstmtUpdate.close();
+		return numberOfRows>0;
 		
 	}
 
@@ -110,12 +114,13 @@ public class JDBCIdentityDAO {
     public boolean deleteIdentity(Identity newIdentity)throws SQLException {
 		
 		String deleteStatement = "DELETE from IDENTITIES where IDENTITIES_DISPLAYNAME=?";
-		int no_of_rows;
-		PreparedStatement pstmt_delete = connection.prepareStatement(deleteStatement);
+		int numberOfRows;
+		PreparedStatement pstmtDelete = connection.prepareStatement(deleteStatement);
 	
-		pstmt_delete.setString(1, newIdentity.getDisplayName());
-		no_of_rows=pstmt_delete.executeUpdate();
-		return (no_of_rows>0);
+		pstmtDelete.setString(1, newIdentity.getDisplayName());
+		numberOfRows=pstmtDelete.executeUpdate();
+		pstmtDelete.close();
+		return numberOfRows>0;
 		
 		
 		
@@ -129,11 +134,11 @@ public class JDBCIdentityDAO {
      * @throws SQLException   if there is an error in running the sql query
      */
     public List<Identity> findIdentity (String oldDisplayName) throws SQLException {
-		List<Identity> matchingIdentity = new ArrayList<Identity>();
+		List<Identity> matchingIdentity = new ArrayList<>();
 
-		PreparedStatement pstmt_select = connection.prepareStatement("select * from IDENTITIES WHERE IDENTITIES_DISPLAYNAME=?");
-		pstmt_select.setString(1, oldDisplayName);
-		ResultSet rs = pstmt_select.executeQuery();
+		PreparedStatement pstmtSelect = connection.prepareStatement("select * from IDENTITIES WHERE IDENTITIES_DISPLAYNAME=?");
+		pstmtSelect.setString(1, oldDisplayName);
+		ResultSet rs = pstmtSelect.executeQuery();
 
 		while (rs.next()) {
 		
@@ -147,7 +152,7 @@ public class JDBCIdentityDAO {
 		matchingIdentity.add(identity);
 	}
 	
-	pstmt_select.close();
+	pstmtSelect.close();
 	return matchingIdentity;
 
 

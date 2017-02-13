@@ -12,7 +12,7 @@ import java.sql.Connection;
 /**
  * @author Deepz
  *
- *Class for database services of admin login
+ *Class for database services of admin logins
  */
 
 
@@ -39,18 +39,18 @@ public class AdminDAO {
 	 */
 	public boolean authenticate(String username, String password) throws SQLException {
 		
-		PreparedStatement pstmt_authenticate = connection.prepareStatement("SELECT ADMIN_USERNAME, ADMIN_PASSWORD FROM ADMINS where ADMIN_USERNAME=?");
+		PreparedStatement pstmtAuthenticate = connection.prepareStatement("SELECT ADMIN_USERNAME, ADMIN_PASSWORD FROM ADMINS where ADMIN_USERNAME=?");
 		
-		pstmt_authenticate.setString(1, username);
+		pstmtAuthenticate.setString(1, username);
 			
 		
-		ResultSet output= pstmt_authenticate.executeQuery();
+		ResultSet rs= pstmtAuthenticate.executeQuery();
 		
-		while (output.next()) {
+		while (rs.next()) {
 			
-			return username.equals(output.getString("ADMIN_USERNAME")) && password.equals(output.getString("ADMIN_PASSWORD")); 
+			return username.equals(rs.getString("ADMIN_USERNAME")) && password.equals(rs.getString("ADMIN_PASSWORD")); 
 		}
-		
+		pstmtAuthenticate.close();
 		return false;
 
 
